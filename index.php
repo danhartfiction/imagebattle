@@ -52,9 +52,9 @@ if (!$mode or $mode == 'new') {
    # Next set!
    header("Location: /ib/index.php?mode=battle&folder=$folder");
 } else {
-  echo "Mode: $mode<br>";
+#  echo "Mode: $mode<br>";
   $folder = $_GET['folder'];
-  echo "Folder: $folder<br>";
+#  echo "Folder: $folder<br>";
 
   # Find two random images
   $battleImages = array();
