@@ -28,25 +28,25 @@ if (!$mode or $mode == 'new') {
   echo "</ul>";
 } elseif ($mode == 'victory') {
    $db = mysqli_connect('localhost', 'ImageBattle', 'password', 'ImageBattle') or die();
-   $folder = $_GET['folder'];
+   $folder = base64_encode($_GET['folder']);
    $winner = $_GET['winner'];
    $loser = $_GET['loser'];
    # Update winning image
-   if ($w_image_result = mysqli_query($db, "SELECT * FROM ImageBattle WHERE filename='$winner' LIMIT 1")) {
+   if ($w_image_result = mysqli_query($db, "SELECT * FROM ImageBattle WHERE filename='$winner' AND category_data='$folder') LIMIT 1")) {
      $w_image = $w_image_result->fetch_assoc();
      if (isset($w_image['id'])) {
-       mysqli_query($db, "UPDATE ImageBattle SET total_wins='" . ($w_image['total_wins'] + 1) . "', category_data='" . 'DATA' . "' WHERE id='" . $w_image['id'] . "' LIMIT 1;") or die();
+       mysqli_query($db, "UPDATE ImageBattle SET total_wins='" . ($w_image['total_wins'] + 1) . "' WHERE id='" . $w_image['id'] . "' LIMIT 1;") or die();
      } else {
-       mysqli_query($db, "INSERT INTO ImageBattle (id, filename, total_wins, total_losses, category_data) VALUES ('', '$winner', '1', '0', 'DATA')") or die();
+       mysqli_query($db, "INSERT INTO ImageBattle (id, filename, raw_filename, total_wins, total_losses, category_data) VALUES ('', '$winner', '" . base64_decode($winner) . "' ,'1', '0', '" . $folder . "')") or die();
      }
    }
    # Update losing image
    if ($l_image_result = mysqli_query($db, "SELECT * FROM ImageBattle WHERE filename='$loser' LIMIT 1")) {
      $l_image = $l_image_result->fetch_assoc();
      if (isset($l_image['id'])) {
-       mysqli_query($db, "UPDATE ImageBattle SET total_losses='" . ($l_image['total_losses'] + 1) . "', category_data='" . 'DATA' . "' WHERE id='" . $l_image['id'] . "' LIMIT 1;") or die();
+       mysqli_query($db, "UPDATE ImageBattle SET total_losses='" . ($l_image['total_losses'] + 1) . "', WHERE id='" . $l_image['id'] . "' LIMIT 1;") or die();
      } else {
-       mysqli_query($db, "INSERT INTO ImageBattle (id, filename, total_wins, total_losses, category_data) VALUES ('', '$loser', '0', '1', 'DATA')") or die();
+       mysqli_query($db, "INSERT INTO ImageBattle (id, filename, raw_filename, total_wins, total_losses, category_data) VALUES ('', '$loser', '" . base64_decode($loswer) . "', '0', '1', '" . $folder . "')") or die();
      }
    }
    # Next set!
