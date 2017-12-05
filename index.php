@@ -70,19 +70,30 @@ if (!$mode or $mode == 'new') {
       }
     }
   }
+  $maxwidth = 600;
   $random_images = array_rand($battleImages, 2);
-  $image1 = base64_encode($battleImages[$random_images[0]]);
-  $image2 = base64_encode($battleImages[$random_images[1]]);
+  $image1_raw = $battleImages[$random_images[0]];
+  $image2_raw = $battleImages[$random_images[1]];
+  $image1 = base64_encode($image1_raw);
+  $image2 = base64_encode($image2_raw);
+  list($img1_width, $img1_height, $img1_type, $img1_attr) = getimagesize($image1_raw);;
+  list($img2_width, $img2_height, $img2_type, $img2_attr) = getimagesize($image2_raw);;
+  if ($img1_width > $maxwidth) {
+    $img1_width = $maxwidth;
+  }
+  if ($img2_width > $maxwidth) {
+    $img2_width = $maxwidth;
+  }
   echo "<table border=0, cellpadding=10, cellspacing=0 width=100%><tr>";
-  echo "<td width=50% valign=top>";
+  echo "<td width=50% valign=top align=center>";
   echo "<a href=\"/ib/index.php?mode=victory&folder=$folder&winner=$image1&loser=$image2\">";
-  echo "<img width=100% src=\"" . $battleImages[$random_images[0]] . "\"></a></td>";
-  echo "<td width=50% valign=top>";
+  echo "<img src=\"" . $battleImages[$random_images[0]] . "\" width=\"$img1_width\"></a></td>";
+  echo "<td width=50% valign=top align=center>";
   echo "<a href=\"/ib/index.php?mode=victory&folder=$folder&winner=$image2&loser=$image1\">";
-  echo "<img width=100% src=\"" . $battleImages[$random_images[1]] . "\"></a></td>";
+  echo "<img src=\"" . $battleImages[$random_images[1]] . "\" width=\"$img2_width\"></a></td>";
   echo "</tr></table>";
 }
-
-echo "</body></html>";
-
 ?>
+</body>
+</html>
+
